@@ -1,3 +1,4 @@
+import { ROLE } from "@/helpers";
 import mongoose from "mongoose";
 
 interface IEmployee {
@@ -9,7 +10,7 @@ interface IEmployee {
   country: string;
   email: string;
   reportingManager: number | null;
-  role: number;
+  role: ROLE;
 }
 
 const Schema = mongoose.Schema;
@@ -26,7 +27,7 @@ const EmployeeSchema = new Schema<IEmployee>({
     ref: "Employee",
     required: false,
   },
-  role: { type: Number, required: true },
+  role: { type: Number, required: true, enum: [1, 2, 3] },
 });
 
 EmployeeSchema.index({ staffId: 1 }, { unique: true });

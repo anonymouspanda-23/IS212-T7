@@ -1,6 +1,7 @@
-enum DATA {
-  AVAILABLE = "Available",
-  UNAVAILABLE = "Unavailable",
+enum ROLE {
+  HR = 1,
+  Staff = 2,
+  Manager = 3,
 }
 
-export { DATA };
+export { ROLE };
