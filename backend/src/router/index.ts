@@ -8,8 +8,17 @@ import swaggerSpec from "@/swagger";
 import Router from "koa-router";
 import { koaSwagger } from "koa2-swagger-ui";
 
+/**
+ * Services
+ */
 const requestService = new RequestService();
+const employeeService = new EmployeeService();
+
+/**
+ * Controllers
+ */
 const requestController = new RequestController(requestService);
+const employeeController = new EmployeeController(employeeService);
 
 const router = new Router();
 router.prefix("/api/v1");
@@ -25,9 +34,6 @@ router.get(
     },
   })
 );
-
-const employeeService = new EmployeeService();
-const employeeController = new EmployeeController(employeeService);
 
 router.get("/", async (ctx: any) => {
   ctx.body = `Server is Running! 💨`;
