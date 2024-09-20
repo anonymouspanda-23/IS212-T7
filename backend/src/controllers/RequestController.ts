@@ -59,14 +59,13 @@ class RequestController {
   }
 
   public async postRequest(ctx: any) {
-    const { requestDetails } = ctx.request.body;
+    const requestDetails = ctx.request.body;
     if (!requestDetails) {
       ctx.body = {
         error: errMsg.MISSING_PARAMETERS,
       };
       return;
     }
-    // might need to convert input to json
     const result = await this.requestService.postRequest(requestDetails);
     ctx.body = result;
   }

@@ -2,10 +2,10 @@ import EmployeeController from "@/controllers/EmployeeController";
 import RequestController from "@/controllers/RequestController";
 import { AccessControl } from "@/helpers";
 import { checkUserRolePermission } from "@/middleware/checkUserRolePermission";
+import EmployeeService from "@/services/employeeService";
 import RequestService from "@/services/requestService";
 import swaggerSpec from "@/swagger";
 import Router from "koa-router";
-import EmployeeService from "@/services/employeeService";
 import { koaSwagger } from "koa2-swagger-ui";
 
 const requestService = new RequestService();
@@ -136,5 +136,21 @@ router.get("/getDeptSchedule", (ctx) => requestController.getDeptSchedule(ctx));
 router.get("/getCompanySchedule", (ctx) =>
   requestController.getCompanySchedule(ctx)
 );
+
+/**
+ * @openapi
+ * /api/v1/postRequest:
+ *   post:
+ *     description: Post Request data (Submit WFH application form)
+ *     tags: [Request]
+ *     parameters:
+ *       - in: WFH Application Details
+ *     responses:
+ *       200:
+ *         description: Returns an Promise object
+ */
+router.post("/postRequest", async (ctx) => {
+  await requestController.postRequest(ctx);
+});
 
 export default router;
