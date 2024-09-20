@@ -1,6 +1,6 @@
 import RequestDb from "@/database/RequestDb";
 import { Dept, errMsg } from "@/helpers";
-import EmployeeService from "./employeeService";
+import EmployeeService from "./EmployeeService";
 
 class RequestService {
   private employeeService = new EmployeeService();

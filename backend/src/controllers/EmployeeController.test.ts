@@ -1,6 +1,6 @@
 import EmployeeController from "@/controllers/EmployeeController";
 import { errMsg } from "@/helpers";
-import EmployeeService from "@/services/employeeService";
+import EmployeeService from "@/services/EmployeeService";
 import generateMockEmployee from "@/tests/mockData";
 import { Context } from "koa";
 

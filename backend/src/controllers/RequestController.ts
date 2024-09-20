@@ -1,6 +1,6 @@
 import { Dept, errMsg } from "@/helpers";
 import { deptSchema, teamSchema } from "@/schema";
-import RequestService from "@/services/requestService";
+import RequestService from "@/services/RequestService";
 import { Context } from "koa";
 
 class RequestController {
