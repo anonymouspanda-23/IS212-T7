@@ -41,8 +41,9 @@ import {
 } from "./pages/schedule"
 import { Header } from "./components/header"; // Custom header if you have one
 import { WFHForm } from "./pages/wfh-application"
-import { useCustomNotificationProvider } from "./components/toast";
+// import { useCustomNotificationProvider } from "./components/toast";
 
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   return (
     <BrowserRouter>
@@ -51,36 +52,16 @@ const App = () => {
       <ConfigProvider>
         <ChakraProvider>
           <Refine
-            dataProvider={dataProvider("https://api.fake-rest.refine.dev")}
+            dataProvider={dataProvider(API_URL)}
             routerProvider={routerProvider}
             authProvider={authProvider}
-            notificationProvider={useCustomNotificationProvider} // Use ChakraUI's notification provider
+            // notificationProvider={useCustomNotificationProvider} // Use ChakraUI's notification provider
             resources={[
               {
-                name: "Schedule",
+                name: "schedule",
                 list: ScheduleList,
                 meta: {
                   canDelete: false,
-                },
-              },
-              {
-                name: "blog_posts",
-                list: "/blog-posts",
-                create: "/blog-posts/create",
-                edit: "/blog-posts/edit/:id",
-                show: "/blog-posts/show/:id",
-                meta: {
-                  canDelete: true,
-                },
-              },
-              {
-                name: "categories",
-                list: "/categories",
-                create: "/categories/create",
-                edit: "/categories/edit/:id",
-                show: "/categories/show/:id",
-                meta: {
-                  canDelete: true,
                 },
               },
               {
@@ -98,8 +79,6 @@ const App = () => {
             options={{
               syncWithLocation: true,
               warnWhenUnsavedChanges: true,
-              useNewQueryKeys: true,
-              projectId: "cvDbbL-7DVGFW-l9PPN7",
             }}
           >
             <Routes>
@@ -122,7 +101,7 @@ const App = () => {
                 {/* Default route to the dashboard */}
                 {/* <Route index element={<DashboardPage />} /> */}
                 {/* Schedule Routes */}
-                <Route path="/schedule">
+                <Route path="/schedule" >
                   <Route index element={<ScheduleList />} />
                 </Route>
                 <Route path="/wfhform" element={ < WFHForm/>}/>
