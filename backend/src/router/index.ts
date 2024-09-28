@@ -105,7 +105,9 @@ router.post("/login", (ctx) => employeeController.getEmployeeByEmail(ctx));
  *       200:
  *         description: Returns an employee object
  */
+
 router.get("/getEmployee", (ctx) => employeeController.getEmployee(ctx));
+
 
 /**
  * @openapi
