@@ -36,10 +36,11 @@ class RequestDb {
     return schedule;
   }
 
-  public async getTeamSchedule(reportingManager: number) {
+  public async getTeamSchedule(reportingManager: number, dept: Dept) {
     const teamSchedule = await Request.find(
       {
         reportingManager,
+        dept,
         status: Status.APPROVED,
       },
       "-_id -createdAt -updatedAt"

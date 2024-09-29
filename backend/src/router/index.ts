@@ -108,7 +108,6 @@ router.post("/login", (ctx) => employeeController.getEmployeeByEmail(ctx));
 
 router.get("/getEmployee", (ctx) => employeeController.getEmployee(ctx));
 
-
 /**
  * @openapi
  * /api/v1/getMySchedule?myId={INSERT ID HERE}:
@@ -130,7 +129,7 @@ router.get("/getMySchedule", (ctx) => requestController.getMySchedule(ctx));
 
 /**
  * @openapi
- * /api/v1/getTeamSchedule?reportingManager={INSERT ID HERE}:
+ * /api/v1/getTeamSchedule?reportingManager={INSERT ID HERE}&dept={INSERT DEPARTMENT HERE}:
  *   get:
  *     description: Get your own team's schedule
  *     tags: [Schedule]
@@ -140,7 +139,14 @@ router.get("/getMySchedule", (ctx) => requestController.getMySchedule(ctx));
  *         schema:
  *           type: number
  *         required: true
- *         description: Retrieve lists of your team's schedule that are approved
+ *         description: Reporting manager Id
+ *       - in: query
+ *         name: dept
+ *         schema:
+ *           type: string
+ *           enum: [CEO, Consultancy, Engineering, Finance, HR, IT, Sales, Solutioning]
+ *         required: true
+ *         description: Pass in staff's department
  *     responses:
  *       200:
  *         description: Returns a request object
@@ -158,7 +164,7 @@ router.get("/getTeamSchedule", (ctx) => requestController.getTeamSchedule(ctx));
  *         name: dept
  *         schema:
  *           type: string
- *           enum: [CEO, Consultancy, Engineering, Finance, HR, IT, Sales, Solutioning ]
+ *           enum: [CEO, Consultancy, Engineering, Finance, HR, IT, Sales, Solutioning]
  *         required: true
  *         description: Retrieve lists of request by that dept
  *     responses:
