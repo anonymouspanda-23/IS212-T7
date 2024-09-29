@@ -1,18 +1,17 @@
 import {
-  useTable,
-} from "@refinedev/antd";
-
-import {
   useEffect,
   useContext,
   useState,
   useRef
 } from "react";
 
+import { useGetIdentity } from "@refinedev/core";
+import { EmployeeJWT } from "@/interfaces/employee";
+import axios from "axios";
+
+// SCHEDULE-X imports
 import { ColorModeContext } from "../../contexts/color-mode";
-import { useCalendarApp, ScheduleXCalendar, Calendar } from '@schedule-x/react'
 import {
-  createViewDay,
   createViewMonthAgenda,
   createViewMonthGrid,
   createViewWeek,
@@ -20,120 +19,85 @@ import {
   viewMonthGrid,
 } from '@schedule-x/calendar'
 import { createEventModalPlugin } from '@schedule-x/event-modal'
-import { createEventsServicePlugin } from '@schedule-x/events-service'
-
-import calendarVar from '../../helper/scheduleVar'
+import { customCalendarConfig } from "@/config/calendarType";
+import {calendarVar, RequestType} from '../../helper/scheduleVar'
 import '@schedule-x/theme-default/dist/index.css'
+import { IEvent, IResponseData } from "@/interfaces/schedule";
 
-import { useApiUrl, useCustom } from "@refinedev/core";
-
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export const ScheduleList = () => {
-  const { tableProps } = useTable({
-    queryOptions: {
-      keepPreviousData: true,
-    },
-  });
-  const myId = 140008; // Change ID according to user
-  const apiUrl = useApiUrl();
 
+  const { data: user } = useGetIdentity<EmployeeJWT>();
   const [calendarEvents, setCalendarEvents] = useState<IEvent[]>([]); // State for calendar events
-  const { data: responseData, isLoading: scheduleIsLoading } = useCustom<IResponseData[]>({
-    url: `${apiUrl}/api/v1/getMySchedule`,
-    method: "get",
-    config: {
-      query: {
-        myId: myId
-      },
-    },
-  });
+  useEffect(() => {
+    if (user?.staffId) {
+      fetchScheduleData(user.staffId)
+    }
+  }, [user]);
 
+  const fetchScheduleData = async (staffId: string) => {
+    try {
+      const responseData = await axios.get(`${backendUrl}/api/v1/getMySchedule`, {
+        params: { myId: staffId },
+        timeout: 300000,
+      });
+      const eventArr: IResponseData[] = responseData?.data
+
+      const formattedData: IEvent[] = eventArr.map((item) => {
+        const formatDate = (date: Date, time?: string) => 
+          `${date.toLocaleDateString("en-CA", { timeZone: "Asia/Singapore" })}${time ? ` ${time}` : ''}`;
+        let start, end;
+        const requestedDate = new Date(item.requestedDate);
+        switch (item.requestType) {
+          case RequestType.FULL:
+            start = end = formatDate(requestedDate);
+            break;
+
+          case RequestType.PM:
+            start = formatDate(requestedDate, "13:00"); // Hard set time for PM
+            end = formatDate(requestedDate, "18:00");
+            break;
+
+          case RequestType.AM:
+            start = formatDate(requestedDate, "08:00"); // Hard set time for AM
+            end = formatDate(requestedDate, "12:00");
+            break;
+
+          default:
+            start = end = formatDate(requestedDate);
+            break;
+        }
+        let calendarColor;
+        if (item.status == "PENDING"){
+          calendarColor = item.requestType == RequestType.FULL ? calendarVar.PENDINGFULL: calendarVar.PENDINGHALF
+        }else{
+          calendarColor = item.requestType == RequestType.FULL ? calendarVar.FULLDAY: calendarVar.HALFDAY
+        }
+        return {
+          id: item.requestId.toString(),
+          title: `Work from Home (${item.requestType})`,
+          description: `Request by ${item.staffName} to ${item.reason}`,
+          start,
+          end,
+          calendarId: calendarColor
+        };
+      });
+      // Update calendar events
+      setCalendarEvents(formattedData || []);
+      
+    } catch (error) {
+      console.error("Error fetching schedule data:", error);
+
+    }
+  };
+
+  // Schedule-X const
   const { mode } = useContext(ColorModeContext);
   const calendarTheme = mode === "dark" ? "dark" : "light";
   const calendarRef = useRef<Calendar | null>(null);
 
-  // Calendar Data
-  const calendarConfig = {
-      halfday: {
-        colorName: calendarVar.HALFDAY,
-        lightColors: {
-          main: '#f9d71c',
-          container: '#fff5aa',
-          onContainer: '#594800',
-        },
-        darkColors: {
-          main: '#fff5c0',
-          onContainer: '#fff5de',
-          container: '#a29742',
-        },
-      },
-      fullday: {
-        colorName: calendarVar.FULLDAY,
-        lightColors: {
-          main: '#f91c45',
-          container: '#ffd2dc',
-          onContainer: '#59000d',
-        },
-        darkColors: {
-          main: '#ffc0cc',
-          onContainer: '#ffdee6',
-          container: '#a24258',
-        },
-      },
-  }
-
-  // Data manipulation
-  useEffect(() => {
-    const fetchSchedule = async () => {
-      if (responseData && !scheduleIsLoading) {
-        const formattedData: IEvent[] = responseData.data?.map((item) => {
-          let start, end;
-  
-          switch (item.requestType) {
-            case "FULL":
-              start = new Date(item.requestedDate).toISOString().split('T')[0];
-              end = start;
-              break;
-  
-            case "PM":
-              start = new Date(item.requestedDate);
-              start.setHours(13, 0, 0); // 13:00
-              end = new Date(item.requestedDate);
-              end.setHours(18, 0, 0); // 18:00
-              start = start.toISOString().replace('T', ' ').split('.')[0];
-              end = end.toISOString().replace('T', ' ').split('.')[0];
-              break;
-  
-            case "AM":
-              start = new Date(item.requestedDate);
-              start.setHours(8, 0, 0); // 08:00
-              end = new Date(item.requestedDate);
-              end.setHours(13, 0, 0); // 13:00
-              start = start.toISOString().replace('T', ' ').split('.')[0];
-              end = end.toISOString().replace('T', ' ').split('.')[0];
-              break;
-  
-            default:
-              start = end = new Date(item.requestedDate).toISOString().split('T')[0];
-              break;
-          }
-  
-          return {
-            id: item.requestId.toString(),
-            title: `WORK FROM HOME${item.requestType === 'AM' ? ' (AM)' : ''}`,
-            description: `Request by ${item.staffName} to ${item.reason}`,
-            start,
-            end,
-            calendarId: item.requestType == "FULL" ? "full": 'halfday'
-          };
-        });
-        // Update calendar events
-        setCalendarEvents(formattedData || []);
-      }
-    };
-    fetchSchedule();
-  }, [responseData, scheduleIsLoading]);
-
+  // Create the Calendar
   useEffect(() => {
     if (!calendarRef.current && calendarEvents.length > 0) {
       calendarRef.current = createCalendar({
@@ -151,11 +115,11 @@ export const ScheduleList = () => {
           end: '18:00',
         },
         plugins: [createEventModalPlugin()],
-        calendars: calendarConfig,
+        calendars: customCalendarConfig,
       });
       calendarRef.current.render(document.getElementById('calendar'));
     }
-  }, [calendarEvents]);
+  }, [calendarEvents, calendarTheme]);
 
   useEffect(() => {
     if (calendarRef.current) {
@@ -165,7 +129,7 @@ export const ScheduleList = () => {
 
   return (
     <div>
-      <div id="calendar"></div>
+      <div id="calendar" style={{ height: "650px", maxHeight: "90vh" }}></div>
     </div>
   );
 };
