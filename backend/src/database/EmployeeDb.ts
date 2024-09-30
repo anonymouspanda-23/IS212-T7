@@ -14,7 +14,7 @@ class EmployeeDb {
       {
         email: userEmail,
       },
-      "staffId hashedPassword role"
+      "staffId reportingManager hashedPassword role"
     ).exec();
   }
 }
