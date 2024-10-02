@@ -49,7 +49,10 @@ class EmployeeController {
       position,
       email,
       reportingManager,
+      reportingManagerName,
       role,
+      tempReportingManager,
+      tempReportingManagerName,
     } = result;
 
     const name = `${staffFName} ${staffLName}`;
@@ -61,7 +64,10 @@ class EmployeeController {
       position,
       email,
       reportingManager,
+      reportingManagerName,
       role,
+      tempReportingManager,
+      tempReportingManagerName,
     };
   }
 }
