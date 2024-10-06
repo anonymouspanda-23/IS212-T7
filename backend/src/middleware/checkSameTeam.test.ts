@@ -58,6 +58,7 @@ describe("checkSameTeam middleware", () => {
       },
     } as unknown as Context;
 
+    employeeServiceMock.getEmployee.mockResolvedValue(null);
     await checkSameTeamMiddleware(ctx, next);
     expect(UtilsController.throwAPIError).toHaveBeenCalledWith(
       ctx,
@@ -114,6 +115,35 @@ describe("checkSameTeam middleware", () => {
       errMsg.DIFFERENT_TEAM
     );
     expect(next).not.toHaveBeenCalled();
+  });
+
+  it("should be able to view team schedule if user is from the same team", async () => {
+    ctx = {
+      request: {
+        header: {
+          id: String(middlewareMockData.Sales_Same_Team.staffId),
+        },
+      },
+      query: {
+        reportingManager: String(middlewareMockData.Sales_Manager.staffId),
+        dept: Dept.SALES,
+      },
+    } as unknown as Context;
+
+    employeeServiceMock.getEmployee.mockResolvedValue(
+      middlewareMockData.Sales_Same_Team as any
+    );
+
+    await checkSameTeamMiddleware(ctx, next);
+    expect(UtilsController.throwAPIError).not.toHaveBeenCalledWith(
+      ctx,
+      errMsg.DIFFERENT_DEPARTMENT
+    );
+    expect(UtilsController.throwAPIError).not.toHaveBeenCalledWith(
+      ctx,
+      errMsg.DIFFERENT_TEAM
+    );
+    expect(next).toHaveBeenCalled();
   });
 
   it("should be able to view team schedule as long as the roleId is 1", async () => {
