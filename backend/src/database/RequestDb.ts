@@ -1,6 +1,7 @@
 import { Dept, Status } from "@/helpers";
-import Request from "@/models/Request";
-import { weekMap, checkDate } from "@/helpers/date";
+import { checkDate, weekMap } from "@/helpers/date";
+import Request, { IRequest } from "@/models/Request";
+import dayjs from "dayjs";
 
 interface RequestDetails {
   staffId: number;
@@ -19,7 +20,7 @@ interface ResponseDates {
 }
 
 class RequestDb {
-  public async getMySchedule(myId: number) {
+  public async getMySchedule(myId: number): Promise<IRequest[]> {
     const schedule = await Request.find(
       { staffId: myId },
       "-_id -createdAt -updatedAt"
@@ -30,7 +31,14 @@ class RequestDb {
   public async getPendingOrApprovedRequests(myId: number) {
     const schedule = await Request.find({
       staffId: myId,
-      status: { $nin: ["CANCELLED", "WITHDRAWN", "REJECTED"] },
+      status: {
+        $nin: [
+          Status.CANCELLED,
+          Status.WITHDRAWN,
+          Status.REJECTED,
+          Status.EXPIRED,
+        ],
+      },
     });
 
     return schedule;
@@ -110,6 +118,21 @@ class RequestDb {
       }
     }
     return responseDates;
+  }
+
+  public async updateRequestStatusToExpired(): Promise<void> {
+    const now = dayjs().utc(true).startOf("day");
+    await Request.updateMany(
+      {
+        status: Status.PENDING,
+        requestedDate: now.toDate(),
+      },
+      {
+        $set: {
+          status: Status.EXPIRED,
+        },
+      }
+    );
   }
 }
 
