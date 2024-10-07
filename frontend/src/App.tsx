@@ -41,11 +41,12 @@ import {
 } from "./pages/schedule"
 import { Header } from "./components/header"; // Custom header if you have one
 import { WFHForm } from "./pages/wfh-application"
+
+import { useCustomNotificationProvider } from "./components/toast";
 import { TeamScheduleList } from "./pages/team-schedule"
 import { Typography } from 'antd';
 import logo from "@/assets/logo.png"
 
-// import { useCustomNotificationProvider } from "./components/toast";
 
 const API_URL = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
@@ -81,7 +82,7 @@ const App = () => {
             dataProvider={dataProvider(API_URL)}
             routerProvider={routerProvider}
             authProvider={authProvider}
-            // notificationProvider={useCustomNotificationProvider} // Use ChakraUI's notification provider
+            notificationProvider={useCustomNotificationProvider} // Use ChakraUI's notification provider
             resources={[
               {
                 name: "schedule",
@@ -97,6 +98,17 @@ const App = () => {
                 meta: {
                   canDelete: false,
                   label: "Team Schedule"
+                },
+              },
+              {
+                name: "WFH Request",
+                list: "/wfhform",
+                create: "/wfhform",
+                edit: "/wfhform",
+                show: "/wfhform",
+                meta: {
+                  canDelete: false,
+                  label: "Apply for WFH"
                 },
               },
               {
