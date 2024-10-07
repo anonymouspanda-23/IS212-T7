@@ -41,7 +41,6 @@ import {
 } from "./pages/schedule"
 import { Header } from "./components/header"; // Custom header if you have one
 import { WFHForm } from "./pages/wfh-application"
-
 import { useCustomNotificationProvider } from "./components/toast";
 import { TeamScheduleList } from "./pages/team-schedule"
 import { Typography } from 'antd';
@@ -98,17 +97,6 @@ const App = () => {
                 meta: {
                   canDelete: false,
                   label: "Team Schedule"
-                },
-              },
-              {
-                name: "WFH Request",
-                list: "/wfhform",
-                create: "/wfhform",
-                edit: "/wfhform",
-                show: "/wfhform",
-                meta: {
-                  canDelete: false,
-                  label: "Apply for WFH"
                 },
               },
               {
