@@ -42,8 +42,9 @@ class RequestDb {
       status: Status.PENDING,
     });
     return pendingRequests;
+  }
 
-public async cancelPendingRequests(
+  public async cancelPendingRequests(
     staffId: number,
     requestId: number
   ): Promise<string | null> {
@@ -65,7 +66,6 @@ public async cancelPendingRequests(
     }
 
     return HttpStatusResponse.OK;
-
   }
 
   public async getPendingOrApprovedRequests(myId: number) {
