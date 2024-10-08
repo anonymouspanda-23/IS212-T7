@@ -36,7 +36,14 @@ class RequestDb {
     return pendingRequests;
   }
 
-  public async cancelPendingRequests(
+  public async getOwnPendingRequests(myId: number): Promise<IRequest[]> {
+    const pendingRequests = await Request.find({
+      staffId: myId,
+      status: Status.PENDING,
+    });
+    return pendingRequests;
+
+public async cancelPendingRequests(
     staffId: number,
     requestId: number
   ): Promise<string | null> {
@@ -58,6 +65,7 @@ class RequestDb {
     }
 
     return HttpStatusResponse.OK;
+
   }
 
   public async getPendingOrApprovedRequests(myId: number) {
