@@ -293,6 +293,31 @@ router.post("/postRequest", async (ctx) => {
 
 /**
  * @openapi
+ * /api/v1/approveRequest:
+ *   post:
+ *     description: approve subordinates' pending requests
+ *     tags: [Pending Requests]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               performedBy:
+ *                 type: number
+ *                 description: Manager's own staffId
+ *               requestId:
+ *                 type: string
+ *                 description: RequestId to be approved
+ *             required:
+ *               - performedBy
+ *               - requestId
+ */
+router.post("/approveRequest", (ctx) => requestController.approveRequest(ctx));
+
+/**
+ * @openapi
  * /api/v1/rejectRequest:
  *   post:
  *     description: reject subordinates' pending requests

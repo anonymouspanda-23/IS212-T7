@@ -76,9 +76,38 @@ class RequestService {
     return requestInsert;
   }
 
-  public async getRequestByRequestId(requestId: number) {
-    const requestDetail = await this.requestDb.getRequestByRequestId(requestId);
+  public async getPendingRequestByRequestId(requestId: number) {
+    const requestDetail = await this.requestDb.getPendingRequestByRequestId(
+      requestId
+    );
     return requestDetail;
+  }
+  
+    public async approveRequest(
+    performedBy: number,
+    requestId: number
+  ): Promise<string | null> {
+    const request = await this.getPendingRequestByRequestId(
+      requestId
+    );
+    if (!request) {
+      return null;
+    }
+    const employee = await this.employeeService.getEmployee(request.staffId);
+    if (!employee) {
+      return null;
+    }
+    if (
+      employee.reportingManager !== performedBy &&
+      employee.tempReportingManager !== performedBy
+    ) {
+      return null;
+    }
+    const result = await this.requestDb.approveRequest(performedBy, requestId);
+    if (!result) {
+      return null;
+    }
+    return HttpStatusResponse.OK;
   }
 
   public async rejectRequest(
@@ -86,11 +115,13 @@ class RequestService {
     requestId: number,
     reason: string
   ): Promise<string | null> {
-    const request = await this.requestDb.getRequestByRequestId(requestId);
+    const request = await this.getPendingRequestByRequestId(
+      requestId
+    );
     if (!request) {
       return null;
     }
-    const employee = await this.employeeDb.getEmployee(request.staffId);
+    const employee = await this.employeeService.getEmployee(request.staffId);
     if (!employee) {
       return null;
     }

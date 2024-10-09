@@ -10,6 +10,7 @@ import {
   deptSchema,
   requestSchema,
   teamSchema,
+  approvalSchema,
   rejectionSchema,
 } from "@/schema";
 import RequestService from "@/services/RequestService";
@@ -158,6 +159,26 @@ class RequestController {
     ctx.body = responseMessage;
   }
 
+  public async approveRequest(ctx: Context) {
+    const approvalDetails = ctx.request.body;
+    const validation = approvalSchema.safeParse(approvalDetails);
+    if (!validation.success) {
+      ctx.body = {
+        errMsg: validation.error.format(),
+      };
+      return;
+    }
+    const { performedBy, requestId } = ctx.request.body as any;
+    const result = await this.requestService.approveRequest(
+      Number(performedBy),
+      Number(requestId)
+    );
+    ctx.body =
+      result == HttpStatusResponse.OK
+        ? HttpStatusResponse.OK
+        : HttpStatusResponse.NOT_MODIFIED;
+  }
+  
   public async rejectRequest(ctx: Context) {
     const rejectionDetails = ctx.request.body;
     const validation = rejectionSchema.safeParse(rejectionDetails);
