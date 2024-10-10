@@ -1,5 +1,4 @@
 import { Dept, HttpStatusResponse, RequestType, Status } from "@/helpers";
-import { checkDate, weekMap } from "@/helpers/date";
 import Request, { IRequest } from "@/models/Request";
 import dayjs from "dayjs";
 
@@ -37,7 +36,6 @@ class RequestDb {
       status: Status.PENDING,
     });
     return pendingRequests;
-
   }
 
   public async cancelPendingRequests(
@@ -62,7 +60,6 @@ class RequestDb {
     }
 
     return HttpStatusResponse.OK;
-
   }
 
   public async getPendingOrApprovedRequests(myId: number) {
@@ -157,7 +154,7 @@ class RequestDb {
     }
     return HttpStatusResponse.OK;
   }
-  
+
   public async getPendingRequestByRequestId(requestId: number) {
     const requestDetail = await Request.findOne(
       {
