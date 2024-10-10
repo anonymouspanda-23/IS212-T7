@@ -1,22 +1,17 @@
-import { Dept, HttpStatusResponse, Status } from "@/helpers";
+import { Dept, HttpStatusResponse, RequestType, Status } from "@/helpers";
 import { checkDate, weekMap } from "@/helpers/date";
 import Request, { IRequest } from "@/models/Request";
 import dayjs from "dayjs";
 
-interface RequestDetails {
+interface InsertDocument {
   staffId: number;
   staffName: string;
   reportingManager: number;
   managerName: string;
   dept: string;
-  requestedDates: [string, string][];
+  requestedDate: Date;
+  requestType: RequestType;
   reason: string;
-}
-
-interface ResponseDates {
-  successDates: [string, string][];
-  noteDates: [string, string][];
-  errorDates: [string, string][];
 }
 
 class RequestDb {
@@ -117,49 +112,13 @@ class RequestDb {
     return request;
   }
 
-  public async postRequest(requestDetails: RequestDetails) {
-    let responseDates: ResponseDates = {
-      successDates: [],
-      noteDates: [],
-      errorDates: [],
-    };
-    const result = await this.getPendingOrApprovedRequests(
-      requestDetails.staffId
-    );
-    const dateList = result.map((request) => request.requestedDate);
-    const weekMapping = weekMap(dateList);
-
-    for (const dateType of requestDetails.requestedDates) {
-      const [date, type] = dateType;
-      let dateInput = new Date(date);
-      if (dateList.some((d) => d.getTime() === dateInput.getTime())) {
-        responseDates.errorDates.push(dateType);
-        continue;
-      }
-      let checkWeek = checkDate(dateInput, weekMapping);
-      if (checkWeek) {
-        responseDates.noteDates.push(dateType);
-      }
-      const document = {
-        staffId: requestDetails.staffId,
-        staffName: requestDetails.staffName,
-        reportingManager: requestDetails.reportingManager,
-        managerName: requestDetails.managerName,
-        dept: requestDetails.dept,
-        requestedDate: date,
-        requestType: type,
-        reason: requestDetails.reason,
-      };
-      try {
-        const requestInsert = await Request.create(document);
-        if (requestInsert) {
-          responseDates.successDates.push(dateType);
-        }
-      } catch (error) {
-        responseDates.errorDates.push(dateType);
-      }
+  public async postRequest(document: InsertDocument): Promise<boolean> {
+    try {
+      const requestInsert = await Request.create(document);
+      return !!requestInsert;
+    } catch (error) {
+      return false;
     }
-    return responseDates;
   }
 
   public async updateRequestStatusToExpired(): Promise<void> {
