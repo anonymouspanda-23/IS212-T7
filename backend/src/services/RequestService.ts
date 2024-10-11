@@ -61,9 +61,12 @@ class RequestService {
     return HttpStatusResponse.OK;
   }
 
-  public async getPendingRequests(staffId: number): Promise<IRequest[]> {
-    const pendingRequests = await this.requestDb.getPendingRequests(staffId);
-    return pendingRequests;
+  public async getAllSubordinatesRequests(
+    staffId: number
+  ): Promise<IRequest[]> {
+    const surbodinatesRequests =
+      await this.requestDb.getAllSubordinatesRequests(staffId);
+    return surbodinatesRequests;
   }
 
   public async getOwnPendingRequests(myId: number): Promise<IRequest[]> {
@@ -174,14 +177,12 @@ class RequestService {
     );
     return requestDetail;
   }
-  
-    public async approveRequest(
+
+  public async approveRequest(
     performedBy: number,
     requestId: number
   ): Promise<string | null> {
-    const request = await this.getPendingRequestByRequestId(
-      requestId
-    );
+    const request = await this.getPendingRequestByRequestId(requestId);
     if (!request) {
       return null;
     }
@@ -207,9 +208,7 @@ class RequestService {
     requestId: number,
     reason: string
   ): Promise<string | null> {
-    const request = await this.getPendingRequestByRequestId(
-      requestId
-    );
+    const request = await this.getPendingRequestByRequestId(requestId);
     if (!request) {
       return null;
     }

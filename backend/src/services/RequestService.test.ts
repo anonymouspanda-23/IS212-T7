@@ -404,7 +404,7 @@ describe("get pending requests", () => {
     /**
      * Mock Database Calls
      */
-    requestDbMock.getPendingRequests = jest.fn();
+    requestDbMock.getAllSubordinatesRequests = jest.fn();
     next = jest.fn() as any;
     EmployeeService.prototype.getEmployee = jest.fn() as any;
     UtilsController.throwAPIError = jest.fn();
@@ -449,17 +449,21 @@ describe("get pending requests", () => {
 
   it("should return user's direct subordinates pending requests", async () => {
     const { reportingManager } = mockRequestData.PENDING;
-    requestDbMock.getPendingRequests.mockResolvedValue(
+    requestDbMock.getAllSubordinatesRequests.mockResolvedValue(
       mockRequestData.PENDING as any
     );
-    const result = await requestService.getPendingRequests(reportingManager);
+    const result = await requestService.getAllSubordinatesRequests(
+      reportingManager
+    );
     expect(result).toEqual(mockRequestData.PENDING as any);
   });
 
-  it("should not return user's direct subordinates requests that have been approved", async () => {
+  it("should still return user's direct subordinates requests that have been approved", async () => {
     const { reportingManager } = mockRequestData.APPROVED;
-    requestDbMock.getPendingRequests.mockResolvedValue([]);
-    const result = await requestService.getPendingRequests(reportingManager);
+    requestDbMock.getAllSubordinatesRequests.mockResolvedValue([]);
+    const result = await requestService.getAllSubordinatesRequests(
+      reportingManager
+    );
     expect(result).toEqual([]);
   });
 });
