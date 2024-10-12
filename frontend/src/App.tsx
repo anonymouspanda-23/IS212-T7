@@ -33,7 +33,6 @@ import {
 } from "./pages/categories";
 import { ScheduleList } from "./pages/schedule";
 import { WFHForm } from "./pages/wfh-application";
-
 import logo from "@/assets/logo.png";
 import { Typography } from "antd";
 import { MyRequests } from "./pages/my-requests/list";
