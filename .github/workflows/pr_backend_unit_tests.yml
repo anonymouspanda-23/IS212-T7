@@ -1,7 +1,7 @@
-name: Run unit tests for WFH Application System backend after merge.
+name: Run unit tests for WFH Application System backend before merge.
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -16,9 +16,13 @@ jobs:
     steps:
       - name: Check out the code.
         uses: actions/checkout@v4.2.1
+        with:
+          fetch-depth: 0
+          ref: ${{github.event.pull_request.head.ref}}
+          repository: ${{github.event.pull_request.head.repo.full_name}}
 
       - name: Set up NodeJS latest stable version.
-        uses: actions/setup-node@v3.8.2
+        uses: actions/setup-node@v4.0.4
         with:
           node-version: 22.x
 
@@ -26,9 +30,6 @@ jobs:
         run: |
           npm install --package-lock-only
           npm ci
-
-      - name: List scripts.
-        run: npm run
 
       - name: Format the code.
         run: npm run prettier
