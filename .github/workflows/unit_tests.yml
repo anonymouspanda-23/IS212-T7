@@ -4,7 +4,6 @@ on:
   pull_request:
     branches:
       - main
-      - feat(no-ticket)-set-up-ci
 
 jobs:
   run_unit_tests:
