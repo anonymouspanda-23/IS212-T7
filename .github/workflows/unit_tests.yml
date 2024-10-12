@@ -3,7 +3,7 @@ name: Run unit tests for WFH Application System backend.
 on:
   pull_request:
     branches:
-      - main
+      - master
 
 jobs:
   run_unit_tests:
