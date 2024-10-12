@@ -1,4 +1,3 @@
-import EmployeeDb from "@/database/EmployeeDb";
 import RequestDb from "@/database/RequestDb";
 import { Dept, errMsg, HttpStatusResponse } from "@/helpers";
 import { IRequest } from "@/models/Request";
@@ -23,11 +22,14 @@ interface ResponseDates {
 }
 
 class RequestService {
-  private requestDb = new RequestDb();
-  private employeeDb = new EmployeeDb();
-  private employeeService = new EmployeeService(this.employeeDb);
+  private employeeService: EmployeeService;
+  private requestDb: RequestDb;
 
-  constructor(requestDb: RequestDb) {
+  constructor(
+    employeeService: EmployeeService,
+    requestDb: RequestDb
+  ) {
+    this.employeeService = employeeService;
     this.requestDb = requestDb;
   }
 

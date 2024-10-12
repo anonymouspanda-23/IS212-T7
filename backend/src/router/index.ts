@@ -20,8 +20,8 @@ const employeeDb = new EmployeeDb();
 /**
  * Services
  */
-const requestService = new RequestService(requestDb);
 const employeeService = new EmployeeService(employeeDb);
+const requestService = new RequestService(employeeService, requestDb);
 
 /**
  * Controllers
@@ -251,6 +251,29 @@ router.get("/getTeamSchedule", checkSameTeam(), (ctx) =>
  *         description: Returns a request object
  */
 router.get("/getDeptSchedule", (ctx) => requestController.getDeptSchedule(ctx));
+
+/**
+ * @openapi
+ * /api/v1/getDeptScheduleByStaffId?staffId={INSERT STAFF ID HERE}:
+ *   get:
+ *     description: Get schedule for departments under current manager/director.
+ *     tags: [Schedule]
+ *     parameters:
+ *       - in: query
+ *         name: staffId
+ *         schema:
+ *           type: number
+ *         required: true
+ *         description: Retrieve list of departments under given staffId.
+ *     responses:
+ *       200:
+ *         description: Returns a request object
+ */
+router.get(
+  "/getDeptByManager",
+  checkUserRolePermission(AccessControl.VIEW_OVERALL_SCHEDULE),
+  (ctx) => employeeController.getDeptByManager(ctx)
+);
 
 /**
  * @openapi
