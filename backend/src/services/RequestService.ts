@@ -94,7 +94,10 @@ class RequestService {
         wfh_arrangements,
       };
     } else {
-      await this.requestDb.getTeamSchedule(reportingManager, position);
+      schedule = await this.requestDb.getTeamSchedule(
+        reportingManager,
+        position,
+      );
     }
 
     return schedule;
