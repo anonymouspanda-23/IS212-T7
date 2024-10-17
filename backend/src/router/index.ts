@@ -1,15 +1,18 @@
 import EmployeeController from "@/controllers/EmployeeController";
 import ReassignmentController from "@/controllers/ReassignmentController";
 import RequestController from "@/controllers/RequestController";
+import WithdrawalController from "@/controllers/WithdrawalController";
 import EmployeeDb from "@/database/EmployeeDb";
 import ReassignmentDb from "@/database/ReassignmentDb";
 import RequestDb from "@/database/RequestDb";
+import WithdrawalDb from "@/database/WithdrawalDb";
 import { AccessControl } from "@/helpers";
 import { checkUserRolePermission } from "@/middleware/checkUserRolePermission";
 
 import EmployeeService from "@/services/EmployeeService";
 import ReassignmentService from "@/services/ReassignmentService";
 import RequestService from "@/services/RequestService";
+import WithdrawalService from "@/services/WithdrawalService";
 import swaggerSpec from "@/swagger";
 import Router from "koa-router";
 import { koaSwagger } from "koa2-swagger-ui";
@@ -20,6 +23,7 @@ import { koaSwagger } from "koa2-swagger-ui";
 const requestDb = new RequestDb();
 const employeeDb = new EmployeeDb();
 const reassignmentDb = new ReassignmentDb();
+const withdrawalDb = new WithdrawalDb();
 
 /**
  * Services
@@ -34,6 +38,7 @@ const requestService = new RequestService(
   requestDb,
   reassignmentService,
 );
+const withdrawalService = new WithdrawalService(withdrawalDb, requestService);
 
 /**
  * Controllers
@@ -41,6 +46,7 @@ const requestService = new RequestService(
 const requestController = new RequestController(requestService);
 const employeeController = new EmployeeController(employeeService);
 const reassignmentController = new ReassignmentController(reassignmentService);
+const withdrawalController = new WithdrawalController(withdrawalService);
 
 const router = new Router();
 router.prefix("/api/v1");
@@ -371,7 +377,9 @@ router.post("/revokeRequest", (ctx) => requestController.revokeRequest(ctx));
  *             required:
  *               - requestId
  */
-router.post("/withdrawRequest", (ctx) => withdrawalController.withdrawRequest(ctx));
+router.post("/withdrawRequest", (ctx) =>
+  withdrawalController.withdrawRequest(ctx),
+);
 
 /**
  * @openapi
