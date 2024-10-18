@@ -41,7 +41,7 @@ class ReassignmentService {
       );
 
     if (!!tempManagerReassignmentReq) {
-      return errMsg.TEMP_MANAGER_OCCUPED;
+      return errMsg.TEMP_MANAGER_OCCUPIED;
     }
 
     const request = {
