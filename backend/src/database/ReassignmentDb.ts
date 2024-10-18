@@ -60,6 +60,17 @@ class ReassignmentDb {
     );
     return reassignmentRequest;
   }
+
+  public async getActiveReassignmentAsTempManager(staffId: number) {
+    const reassignmentRequest = await Reassignment.findOne(
+      {
+        tempReportingManagerId: staffId,
+        active: true,
+      },
+      "-_id -createdAt -updatedAt",
+    );
+    return reassignmentRequest;
+  }
 }
 
 export default ReassignmentDb;
