@@ -41,7 +41,9 @@ jobs:
           git clone https://x-access-token:${{ secrets.DEPLOY_PAT }}@github.com/anonymouspanda-23/IS212-T7-Deployment.git
           cd IS212-T7-Deployment
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp -R ../$APP_REPO_NAME/* .
+          cd ../$APP_REPO_NAME
+          rsync -av --exclude='.git' --exclude='.github' . ../IS212-T7-Deployment/
+          cd ../IS212-T7-Deployment
           git add .
           git diff --staged --quiet || git commit -m "${{ steps.get_commit_message.outputs.commit_message }}"
           git push origin master --force || echo "No changes to push"
