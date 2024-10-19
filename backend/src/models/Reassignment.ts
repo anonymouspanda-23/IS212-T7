@@ -15,6 +15,11 @@ export interface IReassignment {
   originalManagerDept: string;
 }
 
+export interface IHandleReassignment{
+  reassignmentId: number,
+  action: any
+}
+
 const Schema = mongoose.Schema;
 initializeCounter("reassignmentId").catch(console.error);
 
@@ -38,7 +43,7 @@ const ReassignmentSchema = new Schema<IReassignment>(
       enum: [Status.PENDING, Status.APPROVED, Status.REJECTED, Status.EXPIRED],
       default: Status.PENDING,
     },
-    active: { type: Boolean, required: false },
+    active: { type: Boolean, required: false, default: null },
   },
   {
     timestamps: true,

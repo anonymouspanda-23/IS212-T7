@@ -1,10 +1,11 @@
 import Reassignment from "@/models/Reassignment";
 import dayjs from "dayjs";
+import { Status } from "@/helpers";
 
 class ReassignmentDb {
-  public async setActiveReassignmentPeriod(): Promise<void> {
+  public async setActiveReassignmentPeriod(): Promise<boolean> {
     const now = dayjs().utc(true).startOf("day");
-    await Reassignment.updateMany(
+    const { modifiedCount } = await Reassignment.updateMany(
       {
         startDate: { $eq: now.toDate() },
       },
@@ -14,11 +15,13 @@ class ReassignmentDb {
         },
       },
     );
+
+    return modifiedCount > 0;
   }
 
-  public async setInactiveReassignmentPeriod(): Promise<void> {
+  public async setInactiveReassignmentPeriod(): Promise<boolean> {
     const now = dayjs().utc(true).startOf("day");
-    await Reassignment.updateMany(
+    const { modifiedCount } = await Reassignment.updateMany(
       {
         endDate: { $lt: now.toDate() },
       },
@@ -28,6 +31,8 @@ class ReassignmentDb {
         },
       },
     );
+
+    return modifiedCount > 0;
   }
 
   public async insertReassignmentRequest(
@@ -70,6 +75,23 @@ class ReassignmentDb {
       "-_id -createdAt -updatedAt",
     );
     return reassignmentRequest;
+  }
+
+  public async getIncomingReassignmentRequests(staffId: number) {
+    const incomingRequests = await Reassignment.find({
+      tempReportingManagerId: staffId,
+      status: Status.PENDING
+    }).lean();
+
+    return incomingRequests;
+  }
+
+  public async updateReassignmentStatus(reassignmentId: number, status: Status) {
+    return Reassignment.findOneAndUpdate(
+      { reassignmentId },
+      { $set: { status } },
+      { new: true }
+    ).lean();
   }
 }
 
