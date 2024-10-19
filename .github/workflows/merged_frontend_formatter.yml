@@ -27,3 +27,6 @@ jobs:
 
       - name: Format the code.
         run: npm run prettier
+
+      - name: Build the frontend.
+        run: npm run build
