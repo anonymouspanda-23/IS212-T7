@@ -16,10 +16,7 @@ interface InsertDocument {
 
 class RequestDb {
   public async getMySchedule(myId: number): Promise<IRequest[]> {
-    const schedule = await Request.find(
-      { staffId: myId },
-      "-_id -createdAt -updatedAt",
-    );
+    const schedule = await Request.find({ staffId: myId }, "-_id -updatedAt");
     return schedule;
   }
 
