@@ -451,6 +451,8 @@ class RequestService {
         performedBy: PerformedBy.SYSTEM,
         requestType: Request.REASSIGNMENT,
         action: Action.EXPIRE,
+        dept: PerformedBy.SYSTEM as any,
+        position: PerformedBy.SYSTEM as any,
       });
     }
   }
@@ -505,6 +507,14 @@ class RequestService {
       position: managerDetails!.position,
     });
 
+    return HttpStatusResponse.OK;
+  }
+
+  public async setWithdrawnStatus(requestId: number): Promise<string | null> {
+    const result = await this.requestDb.setWithdrawnStatus(requestId);
+    if (!result) {
+      return null;
+    }
     return HttpStatusResponse.OK;
   }
 }
