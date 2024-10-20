@@ -37,6 +37,17 @@ class RequestDb {
     return pendingRequests;
   }
 
+  public async updateRequestinitiatedWithdrawalValue(
+    requestId: number,
+  ): Promise<boolean> {
+    const { modifiedCount } = await Request.updateOne({
+      requestId,
+      initiatedWithdrawal: true,
+    });
+
+    return modifiedCount > 0;
+  }
+
   public async cancelPendingRequests(
     staffId: number,
     requestId: number,
@@ -152,6 +163,7 @@ class RequestDb {
       const { requestId } = await Request.create(document);
       return requestId;
     } catch (error) {
+      console.log(error);
       return false;
     }
   }
