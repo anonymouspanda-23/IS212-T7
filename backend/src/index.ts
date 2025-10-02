@@ -14,4 +14,4 @@ app.use(cors());
 app.use(parser());
 app.use(router.routes());
 
-export { app };
+export default app;

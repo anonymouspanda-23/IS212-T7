@@ -1,4 +1,4 @@
-import { app } from "./index";
+import app from "./index";
 import { initDB, startCronJob } from "./config";
 // import { Mailer } from "./config/mailer";
 

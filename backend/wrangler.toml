@@ -1,4 +1,4 @@
 name = "spm-backend"
-main = "dist/src/server.js"
+main = "dist/src/index.js"
 compatibility_date = "2025-10-02"
 compatibility_flags = ["nodejs_compat"]
