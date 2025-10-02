@@ -49,6 +49,7 @@
         "supertest": "^6.3.4",
         "swagger-jsdoc": "^6.2.8",
         "ts-migrate-mongoose": "^3.8.3",
+        "wrangler": "^4.41.0",
         "zod": "^3.23.8"
     },
     "devDependencies": {
