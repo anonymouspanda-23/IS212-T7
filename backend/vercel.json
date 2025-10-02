@@ -1,6 +1,7 @@
 {
   "version": 2,
   "outputDirectory": "dist",
+  "framework": "express",
   "builds": [
     {
       "src": "server.js",
