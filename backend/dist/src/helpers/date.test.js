@@ -1,0 +1,188 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const date_1 = require("./date");
+const dayjs_1 = __importDefault(require("dayjs"));
+const timezone_1 = __importDefault(require("dayjs/plugin/timezone"));
+const utc_1 = __importDefault(require("dayjs/plugin/utc"));
+const weekOfYear_1 = __importDefault(require("dayjs/plugin/weekOfYear"));
+dayjs_1.default.extend(utc_1.default);
+dayjs_1.default.extend(timezone_1.default);
+dayjs_1.default.extend(weekOfYear_1.default);
+describe("weekMap", () => {
+    it("should correctly map dates to their respective week numbers (3 days of same week)", () => {
+        const dates = [
+            new Date("2024-09-19"),
+            new Date("2024-09-20"),
+            new Date("2024-09-21"),
+        ];
+        const result = (0, date_1.weekMap)(dates);
+        expect(result).toStrictEqual({ "2024-38": 3 });
+    });
+});
+describe("weekMap", () => {
+    it("should correctly map dates to their respective week numbers (2 days from 2 different weeks)", () => {
+        const dates = [new Date("2024-09-19"), new Date("2024-09-12")];
+        const result = (0, date_1.weekMap)(dates);
+        expect(result).toStrictEqual({ "2024-37": 1, "2024-38": 1 });
+    });
+});
+describe("weekMap", () => {
+    it("should correctly map dates to their respective week numbers (Monday and Sunday should be within same week)", () => {
+        const dates = [new Date("2024-09-16"), new Date("2024-09-22")];
+        const result = (0, date_1.weekMap)(dates);
+        expect(result).toStrictEqual({ "2024-38": 2 });
+    });
+});
+describe("checkDate", () => {
+    it("should return true if there are already 2 or more requests in the same week", () => {
+        const dates = [new Date("2024-09-19"), new Date("2024-09-20")];
+        const weekMapping = (0, date_1.weekMap)(dates);
+        expect(weekMapping).toStrictEqual({ "2024-38": 2 });
+        const newDate = new Date("2024-09-21");
+        const result = (0, date_1.checkDate)(newDate, weekMapping);
+        expect(result).toBe(true);
+    });
+    it("should return false if there are less than 2 requests in the same week", () => {
+        const dates = [new Date("2024-09-19")];
+        const weekMapping = (0, date_1.weekMap)(dates);
+        expect(weekMapping).toStrictEqual({ "2024-38": 1 });
+        const newDate = new Date("2024-09-20");
+        const result = (0, date_1.checkDate)(newDate, weekMapping);
+        expect(result).toBe(false);
+    });
+});
+describe("checkWeekend", () => {
+    it("should return true it is a weekend", () => {
+        const dates = new Date("2024-10-12");
+        const checkwkend = (0, date_1.checkWeekend)(dates);
+        expect(checkwkend).toBe(true);
+    });
+    it("should return false if it is a weekday", () => {
+        const dates = new Date("2024-10-10");
+        const checkwkend = (0, date_1.checkWeekend)(dates);
+        expect(checkwkend).toBe(false);
+    });
+});
+describe("checkPastDate", () => {
+    it("should return true it is a past date", () => {
+        const dates = new Date("2022-10-12");
+        const checkwkend = (0, date_1.checkPastDate)(dates);
+        expect(checkwkend).toBe(true);
+    });
+    it("should return true if it is not 24 hrs ahead of application", () => {
+        const today = new Date();
+        const checkToday = (0, date_1.checkPastDate)(today);
+        expect(checkToday).toBe(true);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        const checkTomorrow = (0, date_1.checkPastDate)(tomorrow);
+        expect(checkTomorrow).toBe(true);
+    });
+    it("should return false if it is a future date", () => {
+        const today = new Date();
+        const future = new Date(today);
+        future.setDate(today.getDate() + 2);
+        const checkFuture = (0, date_1.checkPastDate)(future);
+        expect(checkFuture).toBe(false);
+    });
+});
+describe("checkLatestDate", () => {
+    it("should return true if it is not 24 business hours before", () => {
+        const monday = (0, dayjs_1.default)().tz("Asia/Singapore").day(1).add(1, "week").toDate();
+        const testFriday = (0, dayjs_1.default)(monday).subtract(3, "day").toDate();
+        expect((0, date_1.checkLatestDate)(monday, testFriday)).toBe(true);
+        const tuesday = (0, dayjs_1.default)().tz("Asia/Singapore").day(2).add(1, "week").toDate();
+        const testMonday = (0, dayjs_1.default)(tuesday).subtract(1, "day").toDate();
+        expect((0, date_1.checkLatestDate)(monday, testMonday)).toBe(true);
+    });
+    it("should return false if it is 24 business hours before", () => {
+        const monday = (0, dayjs_1.default)().tz("Asia/Singapore").day(1).add(1, "week").toDate();
+        const testThursday = (0, dayjs_1.default)(monday).subtract(4, "day").toDate();
+        expect((0, date_1.checkLatestDate)(monday, testThursday)).toBe(false);
+        const tuesday = (0, dayjs_1.default)().tz("Asia/Singapore").day(2).add(1, "week").toDate();
+        const testFriday = (0, dayjs_1.default)(tuesday).subtract(4, "day").toDate();
+        expect((0, date_1.checkLatestDate)(tuesday, testFriday)).toBe(false);
+    });
+});
+describe("checkValidWithdrawalDate", () => {
+    it("should return true if current time is before 00:00 of requested date", () => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        expect((0, date_1.checkValidWithdrawalDate)(tomorrow)).toBe(true);
+    });
+    it("should return false if current time is after 00:00 of requested date", () => {
+        const today = new Date();
+        const yesterday = new Date(today);
+        yesterday.setDate(today.getDate() - 1);
+        expect((0, date_1.checkValidWithdrawalDate)(yesterday)).toBe(false);
+    });
+});
+describe("checkPastWithdrawalDate", () => {
+    it("should return true for a past / invalid (eg. today) withdrawal date", () => {
+        const today = new Date();
+        expect((0, date_1.checkPastWithdrawalDate)(today)).toBe(true);
+    });
+    it("should return false for a valid future withdrawal date", () => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+        expect((0, date_1.checkPastWithdrawalDate)(tomorrow)).toBe(false);
+    });
+});
+describe("getDatesInRange", () => {
+    it("should return an array of dates in the range", () => {
+        const start = new Date("2024-10-25");
+        const end = new Date("2024-10-28");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual(["2024-10-25", "2024-10-26", "2024-10-27", "2024-10-28"]);
+    });
+    it("should return an array with a single date if start and end are the same", () => {
+        const date = new Date("2024-10-25");
+        const result = (0, date_1.getDatesInRange)(date, date);
+        expect(result).toEqual(["2024-10-25"]);
+    });
+    it("should return an empty array if the start date is after the end date", () => {
+        const start = new Date("2024-10-29");
+        const end = new Date("2024-10-25");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual([]);
+    });
+    it("should handle a range of one day correctly", () => {
+        const start = new Date("2024-10-25");
+        const end = new Date("2024-10-25");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual(["2024-10-25"]);
+    });
+    it("should return multiple dates when the range spans a month", () => {
+        const start = new Date("2024-10-25");
+        const end = new Date("2024-11-02");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual([
+            "2024-10-25",
+            "2024-10-26",
+            "2024-10-27",
+            "2024-10-28",
+            "2024-10-29",
+            "2024-10-30",
+            "2024-10-31",
+            "2024-11-01",
+            "2024-11-02"
+        ]);
+    });
+    it("should handle leap years correctly", () => {
+        const start = new Date("2020-02-28");
+        const end = new Date("2020-03-02");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual(["2020-02-28", "2020-02-29", "2020-03-01", "2020-03-02"]);
+    });
+    it("should handle dates in different years", () => {
+        const start = new Date("2024-12-30");
+        const end = new Date("2025-01-02");
+        const result = (0, date_1.getDatesInRange)(start, end);
+        expect(result).toEqual(["2024-12-30", "2024-12-31", "2025-01-01", "2025-01-02"]);
+    });
+});
