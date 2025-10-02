@@ -1,7 +1,2 @@
-name = "spm-backend"
-main = "dist/src/index.js"
 compatibility_date = "2025-10-02"
-
-# Enable Node.js compatibility
-[env.production]
-compatibility_flags = ["nodejs_compat"]
+compatibility_flags = [ "nodejs_compat" ]
