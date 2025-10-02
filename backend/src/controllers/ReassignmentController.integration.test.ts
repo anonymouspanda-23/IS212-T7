@@ -1,5 +1,5 @@
 import { Action, errMsg } from "@/helpers";
-import { app } from "@/index";
+import app from "@/index";
 import Employee from "@/models/Employee";
 import Reassignment from "@/models/Reassignment";
 import { hashPassword } from "@/tests/utils";

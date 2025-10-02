@@ -1,5 +1,5 @@
 import { errMsg, HttpStatusResponse } from "@/helpers";
-import { app } from "@/index";
+import app from "@/index";
 import Log from "@/models/Log";
 import Employee from "@/models/Employee";
 import Reassignment from "@/models/Reassignment";

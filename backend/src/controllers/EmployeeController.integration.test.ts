@@ -4,7 +4,7 @@ import Employee from '@/models/Employee';
 import path from "path";
 import { readFileSync } from "fs";
 import { hashPassword } from "@/tests/utils";
-import { app } from "@/index";
+import app from "@/index";
 import request from "supertest";
 import { Server } from "http";
 import { errMsg } from "@/helpers";
