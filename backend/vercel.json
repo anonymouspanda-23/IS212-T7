@@ -1,9 +1,17 @@
 {
+  "version": 2,
   "outputDirectory": "dist",
+  "builds": [
+    {
+      "src": "dist/src/server.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
+    }
+  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "src/server.js"
+      "dest": "dist/src/server.js"
     }
   ],
   "functions": {
