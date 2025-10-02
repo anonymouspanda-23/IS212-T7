@@ -4,7 +4,7 @@ dotenv.config();
 import cors from "@koa/cors";
 import Koa from "koa";
 import parser from "koa-bodyparser";
-import router from "@/router";
+import router from "./router";
 import "reflect-metadata";
 
 const app = new Koa();
