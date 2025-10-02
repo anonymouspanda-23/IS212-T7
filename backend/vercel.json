@@ -5,6 +5,9 @@
     {
       "src": "server.js",
       "use": "@vercel/node",
+      "config": {
+        "includeFiles": ["backend/**"]
+      }
     }
   ],
   "routes": [
