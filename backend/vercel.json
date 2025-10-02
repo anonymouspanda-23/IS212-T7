@@ -1,17 +1,16 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
   "builds": [
     {
-      "src": "./backend",
-      "use": "@vercel/node"
+      "src": "dist/src/index.js",
+      "use": "@vercel/node",
+      "config": { "includeFiles": ["dist/**"] }
     }
   ],
-  "outputDirectory": "dist/src",
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "dist/src/index.js"
     }
   ]
 }
