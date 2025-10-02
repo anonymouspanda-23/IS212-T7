@@ -1,16 +1,13 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "dist/src/server.js",
-      "use": "@vercel/node",
-      "config": { "includeFiles": ["dist/**"] }
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/src/server.js"
+      "dest": "src/server.js"
     }
-  ]
+  ],
+  "functions": {
+    "*.js": {
+      "maxDuration": 60
+    }
+  }
 }
