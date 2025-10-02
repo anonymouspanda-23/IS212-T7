@@ -1,4 +1,4 @@
-import Mailer from "@/config/mailer";
+import Mailer from "./mailer";
 import EmployeeDb from "@/database/EmployeeDb";
 import LogDb from "@/database/LogDb";
 import ReassignmentDb from "@/database/ReassignmentDb";

@@ -1,4 +1,4 @@
-import Mailer from "@/config/mailer";
+import Mailer from "../config/mailer";
 import EmployeeController from "@/controllers/EmployeeController";
 import LogController from "@/controllers/LogController";
 import ReassignmentController from "@/controllers/ReassignmentController";

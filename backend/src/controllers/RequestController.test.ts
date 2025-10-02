@@ -21,7 +21,7 @@ import LogService from "@/services/LogService";
 import ReassignmentService from "@/services/ReassignmentService";
 import RequestService from "@/services/RequestService";
 import { Context } from "koa";
-import Mailer from "@/config/mailer";
+import Mailer from "../config/mailer";
 import { jest } from "@jest/globals";
 import UtilsController from "./UtilsController";
 import NotificationService from "@/services/NotificationService";

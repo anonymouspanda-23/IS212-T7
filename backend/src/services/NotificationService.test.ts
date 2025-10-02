@@ -1,4 +1,4 @@
-import Mailer from "@/config/mailer";
+import Mailer from "../config/mailer";
 import { errMsg } from "@/helpers";
 import EmployeeService from "@/services/EmployeeService";
 import NotificationService from "@/services/NotificationService";

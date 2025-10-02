@@ -13,7 +13,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.startCronJob = exports.initDB = void 0;
-const mailer_1 = __importDefault(require("@/config/mailer"));
+const mailer_1 = __importDefault(require("./mailer"));
 const EmployeeDb_1 = __importDefault(require("@/database/EmployeeDb"));
 const LogDb_1 = __importDefault(require("@/database/LogDb"));
 const ReassignmentDb_1 = __importDefault(require("@/database/ReassignmentDb"));

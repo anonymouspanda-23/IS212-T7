@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const mailer_1 = __importDefault(require("@/config/mailer"));
+const mailer_1 = __importDefault(require("../config/mailer"));
 const EmployeeController_1 = __importDefault(require("@/controllers/EmployeeController"));
 const LogController_1 = __importDefault(require("@/controllers/LogController"));
 const ReassignmentController_1 = __importDefault(require("@/controllers/ReassignmentController"));
