@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-require("module-alias/register");
 const index_1 = require("./index");
 const config_1 = require("./config");
 // import { Mailer } from "./config/mailer";
