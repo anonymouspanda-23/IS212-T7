@@ -12,10 +12,5 @@
       "src": "/(.*)",
       "dest": "dist/src/server.js"
     }
-  ],
-  "functions": {
-    "*.js": {
-      "maxDuration": 60
-    }
-  }
+  ]
 }
