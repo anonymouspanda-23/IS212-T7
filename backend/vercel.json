@@ -3,7 +3,7 @@
   "outputDirectory": "dist",
   "builds": [
     {
-      "src": "dist/src/server.js",
+      "src": "backend/src/server.ts",
       "use": "@vercel/node",
       "config": { "includeFiles": ["dist/**"] }
     }
@@ -11,7 +11,7 @@
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "dist/src/server.js"
+      "dest": "backend/src/server.ts"
     }
   ],
   "functions": {
