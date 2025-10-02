@@ -13,27 +13,29 @@ export class Mailer {
     return Mailer.instance;
   }
 
-  public getTransporter(): nodemailer.Transporter {
+  public getTransporter(): nodemailer.Transporter | null {
     if (this.transporter) {
       return this.transporter;
     }
 
-    this.transporter = nodemailer.createTransport({
-      pool: true,
-      host: String(process.env.SMTP_HOST),
-      port: 587,
-      secure: false,
-      auth: {
-        user: String(process.env.SMTP_AUTH_USER),
-        pass: String(process.env.SMTP_AUTH_PASSWORD),
-      },
-    });
+    this.transporter = null;
 
-    this.transporter.verify((error: Error | null, success: boolean) => {
-      if (error) {
-        throw new Error(error.message);
-      }
-    });
+    // this.transporter = nodemailer.createTransport({
+    //   pool: true,
+    //   host: String(process.env.SMTP_HOST),
+    //   port: 587,
+    //   secure: false,
+    //   auth: {
+    //     user: String(process.env.SMTP_AUTH_USER),
+    //     pass: String(process.env.SMTP_AUTH_PASSWORD),
+    //   },
+    // });
+    //
+    // this.transporter.verify((error: Error | null, success: boolean) => {
+    //   if (error) {
+    //     throw new Error(error.message);
+    //   }
+    // });
 
     return this.transporter;
   }

@@ -11,11 +11,11 @@ interface ManagerDetails {
 
 class NotificationService {
   private employeeService: EmployeeService;
-  private mailer: Mailer;
+  // private mailer: Mailer;
 
   constructor(employeeService: EmployeeService, mailer: Mailer) {
     this.employeeService = employeeService;
-    this.mailer = mailer;
+    // this.mailer = mailer;
   }
 
   private async getManagerDetails(managerId: number): Promise<ManagerDetails> {
@@ -111,18 +111,18 @@ class NotificationService {
     staffEmail: string,
     content: { text: string; html: string },
   ): Promise<void> {
-    const transporter = this.mailer.getTransporter();
-    const staffName = staffEmail.split("@")[0];
-
-    const mailOptions = {
-      from: "noreply@lurence.org",
-      to: `${staffName}@yopmail.com`,
-      subject: emailSubject,
-      text: content.text,
-      html: content.html,
-    };
-
-    await transporter.sendMail(mailOptions);
+    // const transporter = this.mailer.getTransporter();
+    // const staffName = staffEmail.split("@")[0];
+    //
+    // const mailOptions = {
+    //   from: "noreply@lurence.org",
+    //   to: `${staffName}@yopmail.com`,
+    //   subject: emailSubject,
+    //   text: content.text,
+    //   html: content.html,
+    // };
+    //
+    // await transporter.sendMail(mailOptions);
   }
 
   public async pushRequestSentNotification(
